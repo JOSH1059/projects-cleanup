@@ -2,6 +2,10 @@
 
 A powerful CLI tool for cleaning up development project directories by removing build artifacts, dependencies, cache files, and other temporary files that accumulate during development.
 
+**👇 See it in action!**
+
+![Project Cleanup Tool Example Console Output](projects-cleanup_ex.png)
+
 ## Why Use This Tool?
 
 During development, projects accumulate various temporary files and directories that can consume significant disk space:
@@ -195,8 +199,6 @@ Optionally cleans caches for:
 ## Example Output
 
 Below is a screenshot of the Project Cleanup Tool in action, showing the interactive CLI and summary after a cleanup operation:
-
-![Project Cleanup Tool Example Console Output](projects-cleanup_ex.png)
 
 ```
 ═══════════════════════════════════════════════════════════
