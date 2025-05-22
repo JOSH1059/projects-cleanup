@@ -221,12 +221,3 @@ cd project-cleanup-tool
 npm install
 npm link  # For local testing
 ```
-
-## Changelog
-
-### v1.0.0
-- Initial release
-- Interactive checkbox selection
-- Multi-project type support
-- Package manager cache cleanup
-- Comprehensive safety features
