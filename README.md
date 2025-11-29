@@ -21,17 +21,17 @@ This tool helps you reclaim disk space by safely identifying and removing these 
 
 ```bash
 # Install globally
-npm install -g project-cleanup-tool
+npm install -g projects-cleanup
 
 # Or install directly from GitHub
-npm install -g JOSH1059/project-cleanup-tool
+npm install -g JOSH1059/projects-cleanup
 ```
 
 ### Local Development / From Source
 ```bash
 # Clone the repository
-$ git clone https://github.com/JOSH1059/project-cleanup-tool.git
-$ cd project-cleanup-tool
+$ git clone https://github.com/JOSH1059/projects-cleanup.git
+$ cd projects-cleanup
 $ npm install          # install dependencies
 $ npm install -g .     # install globally from local source
 ```
