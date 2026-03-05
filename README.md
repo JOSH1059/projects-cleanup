@@ -26,7 +26,7 @@ This tool helps you reclaim disk space by safely identifying and removing these 
 Install directly from GitHub (no npm publish required):
 
 ```bash
-npm install -g github:JOSH1059/projects-cleanup
+npm install -g https://github.com/JOSH1059/projects-cleanup/releases/latest/download/projects-cleanup.tgz
 ```
 
 That's it. The tool is now available as `cleanup`, `clean`, `pcl`, `cleanup-projects`, or `project-cleanup`.
@@ -42,7 +42,7 @@ That's it. The tool is now available as `cleanup`, `clean`, `pcl`, `cleanup-proj
 Run the same install command on any machine to update to the latest version:
 
 ```bash
-npm install -g github:JOSH1059/projects-cleanup
+npm install -g https://github.com/JOSH1059/projects-cleanup/releases/latest/download/projects-cleanup.tgz
 ```
 
 The tool will also notify you at the end of a run if a newer version is available on GitHub.

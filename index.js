@@ -513,7 +513,7 @@ class CleanupTool {
       const newVersion = await updateCheck;
       if (newVersion) {
         console.log(chalk.yellow(`\nUpdate available: v${packageJson.version} → v${newVersion}`));
-        console.log(chalk.dim(`  npm install -g github:JOSH1059/projects-cleanup`));
+        console.log(chalk.dim(`  npm install -g https://github.com/JOSH1059/projects-cleanup/releases/latest/download/projects-cleanup.tgz`));
       }
 
       console.log(chalk.green.bold('\nDone.\n'));

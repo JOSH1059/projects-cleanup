@@ -45045,7 +45045,7 @@ var require_package = __commonJS({
   "package.json"(exports2, module2) {
     module2.exports = {
       name: "projects-cleanup",
-      version: "1.1.0",
+      version: "1.1.1",
       description: "A powerful CLI tool to clean up development project directories by removing build artifacts, dependencies, and cache files.",
       main: "bundle.js",
       bin: {
@@ -45568,7 +45568,7 @@ Project Cleanup  v${packageJson.version}`));
       if (newVersion) {
         console.log(chalk.yellow(`
 Update available: v${packageJson.version} \u2192 v${newVersion}`));
-        console.log(chalk.dim(`  npm install -g github:JOSH1059/projects-cleanup`));
+        console.log(chalk.dim(`  npm install -g https://github.com/JOSH1059/projects-cleanup/releases/latest/download/projects-cleanup.tgz`));
       }
       console.log(chalk.green.bold("\nDone.\n"));
     } catch (error) {
