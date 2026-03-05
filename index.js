@@ -55,7 +55,7 @@ function checkForUpdates() {
   return new Promise((resolve) => {
     const req = https.get({
       hostname: 'raw.githubusercontent.com',
-      path: '/JOSH1059/project-cleanup-tool/main/package.json',
+      path: '/JOSH1059/projects-cleanup/main/package.json',
       timeout: 3000,
       headers: { 'User-Agent': 'project-cleanup-tool' }
     }, (res) => {
@@ -515,7 +515,7 @@ class CleanupTool {
       const newVersion = await updateCheck;
       if (newVersion) {
         console.log(chalk.yellow(`\nUpdate available: v${packageJson.version} → v${newVersion}`));
-        console.log(chalk.dim(`  npm install -g github:JOSH1059/project-cleanup-tool`));
+        console.log(chalk.dim(`  npm install -g github:JOSH1059/projects-cleanup`));
       }
 
       console.log(chalk.green.bold('\nDone.\n'));

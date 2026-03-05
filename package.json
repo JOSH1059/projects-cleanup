@@ -1,5 +1,5 @@
 {
-  "name": "project-cleanup-tool",
+  "name": "projects-cleanup",
   "version": "1.0.7",
   "description": "A powerful CLI tool to clean up development project directories by removing build artifacts, dependencies, and cache files.",
   "main": "index.js",
@@ -15,7 +15,7 @@
     "dev": "node index.js",
     "build": "echo \"No build process needed for this CLI tool\"",
     "install-global": "npm install -g .",
-    "uninstall-global": "npm uninstall -g project-cleanup-tool"
+    "uninstall-global": "npm uninstall -g projects-cleanup"
   },
   "keywords": [
     "cleanup",
@@ -49,12 +49,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JOSH1059/project-cleanup-tool.git"
+    "url": "git+https://github.com/JOSH1059/projects-cleanup.git"
   },
   "bugs": {
-    "url": "https://github.com/JOSH1059/project-cleanup-tool/issues"
+    "url": "https://github.com/JOSH1059/projects-cleanup/issues"
   },
-  "homepage": "https://github.com/JOSH1059/project-cleanup-tool#readme",
+  "homepage": "https://github.com/JOSH1059/projects-cleanup#readme",
   "preferGlobal": true,
   "files": [
     "index.js",
