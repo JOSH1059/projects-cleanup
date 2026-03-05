@@ -38,12 +38,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag "v$VERSION"
           git push origin "v$VERSION"
+          NOTES="Install / Update: npm install -g github:JOSH1059/project-cleanup-tool"
           gh release create "v$VERSION" \
             --title "v$VERSION" \
-            --notes "## Install / Update
-
-\`\`\`bash
-npm install -g github:JOSH1059/project-cleanup-tool
-\`\`\`
-
-Run the same command on any machine to install or update to this version."
+            --notes "$NOTES"
