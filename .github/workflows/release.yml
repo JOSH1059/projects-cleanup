@@ -36,4 +36,5 @@ jobs:
           git push origin "v$VERSION"
           gh release create "v$VERSION" \
             --title "v$VERSION" \
+            --latest \
             --notes "Install / Update: npm install -g github:JOSH1059/project-cleanup-tool"
