@@ -156,10 +156,16 @@ After deleting project files, the tool optionally cleans global package manager 
 git clone https://github.com/JOSH1059/projects-cleanup.git
 cd projects-cleanup
 npm install
-npm install -g .   # install globally from local source
 ```
 
-To release a new version: bump the version in `package.json`, commit, and push to `main`. A GitHub Action will automatically create a git tag and GitHub Release.
+Edit `index.js`, then build before committing:
+
+```bash
+npm run build      # bundles index.js + dependencies into bundle.js
+node bundle.js     # test locally
+```
+
+To release: bump the version in `package.json`, run `npm run build`, commit everything including `bundle.js`, and push to `main`. The GitHub Action will automatically create a tagged release with the installable tarball attached.
 
 ---
 
