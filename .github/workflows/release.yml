@@ -43,8 +43,9 @@ jobs:
           git tag "v$VERSION"
           git push origin "v$VERSION"
           INSTALL_CMD="npm install -g https://github.com/JOSH1059/projects-cleanup/releases/latest/download/projects-cleanup.tgz"
+          printf "**Install / Update:**\n\`\`\`\n%s\n\`\`\`" "$INSTALL_CMD" > notes.md
           gh release create "v$VERSION" \
             --title "v$VERSION" \
             --latest \
-            --notes "Install / Update: $INSTALL_CMD" \
+            --notes-file notes.md \
             projects-cleanup.tgz
