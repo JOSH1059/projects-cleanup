@@ -1,6 +1,6 @@
 {
   "name": "project-cleanup-tool",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A powerful CLI tool to clean up development project directories by removing build artifacts, dependencies, and cache files.",
   "main": "index.js",
   "bin": {
