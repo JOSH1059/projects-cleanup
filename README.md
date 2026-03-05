@@ -1,6 +1,6 @@
 # Project Cleanup Tool
 
-A CLI tool for cleaning up development project directories by removing build artifacts, dependencies, cache files, and other temporary files that accumulate during development.
+A CLI tool for cleaning up development project directories by removing build artifacts, dependencies, cache files, and other temporary files that accumulate during development. Excellent for quickly resetting projects or clearing space on your drive.
 
 [![Auto Release on Version Bump](https://github.com/JOSH1059/projects-cleanup/actions/workflows/release.yml/badge.svg)](https://github.com/JOSH1059/projects-cleanup/actions/workflows/release.yml)
 
