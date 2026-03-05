@@ -42,12 +42,9 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag "v$VERSION"
           git push origin "v$VERSION"
+          INSTALL_CMD="npm install -g https://github.com/JOSH1059/projects-cleanup/releases/latest/download/projects-cleanup.tgz"
           gh release create "v$VERSION" \
             --title "v$VERSION" \
             --latest \
-            --notes "## Install / Update
-
-\`\`\`bash
-npm install -g https://github.com/JOSH1059/projects-cleanup/releases/latest/download/projects-cleanup.tgz
-\`\`\`" \
+            --notes "Install / Update: $INSTALL_CMD" \
             projects-cleanup.tgz
