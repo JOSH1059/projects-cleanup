@@ -163,12 +163,12 @@ class CleanupTool {
     try {
       await this.scanDirectory(this.codeDir, targets);
       spinner.succeed('Directory scan complete');
-      
+
       if (targets.length === 0) {
         return [];
       }
 
-      console.log(chalk.blue('\n📊 Analyzing targets and calculating sizes...'));
+      console.log(chalk.blue('\nAnalyzing targets and calculating sizes...'));
       const progressBar = new EnhancedProgressBar(targets.length, 'Analyzing');
 
       const validatedTargets = [];
@@ -246,15 +246,15 @@ class CleanupTool {
 
   displayTargets(targets) {
     if (targets.length === 0) {
-      console.log(chalk.green('\n🎉 No cleanup targets found! Your directory is already clean.\n'));
+      console.log(chalk.green('\nNo cleanup targets found. Directory is already clean.\n'));
       return false;
     }
 
     const totalSize = targets.reduce((sum, target) => sum + target.size, 0);
-    
-    console.log('\n' + chalk.bold.blue('📋 CLEANUP TARGETS FOUND'));
+
+    console.log('\n' + chalk.bold.blue('CLEANUP TARGETS'));
     console.log(chalk.gray('═'.repeat(80)));
-    console.log(chalk.red(`Found ${targets.length} cleanup targets • Total size: ${chalk.bold(this.formatBytes(totalSize))}\n`));
+    console.log(chalk.red(`Found ${targets.length} targets · Total: ${chalk.bold(this.formatBytes(totalSize))}\n`));
 
     // Group targets by type for better display
     const directories = targets.filter(t => t.type === 'directory');
@@ -277,7 +277,7 @@ class CleanupTool {
       });
     }
 
-    console.log('\n' + chalk.yellow('⚠️  = Might not be a legitimate project folder'));
+    console.log('\n' + chalk.yellow('⚠️  = may not be a legitimate project folder'));
     console.log(chalk.gray('═'.repeat(80)) + '\n');
     
     return true;
@@ -306,7 +306,7 @@ class CleanupTool {
     ]);
 
     if (!proceed) {
-      console.log(chalk.yellow('\n🚪 Cleanup cancelled. No changes were made.\n'));
+      console.log(chalk.yellow('\nCancelled. No changes were made.\n'));
       process.exit(0);
     }
 
@@ -336,10 +336,10 @@ class CleanupTool {
 
   async confirmDeletion(selectedTargets) {
     const totalSize = selectedTargets.reduce((sum, target) => sum + target.size, 0);
-    
-    console.log(chalk.green(`\n📝 Selected ${selectedTargets.length} items for deletion:`));
+
+    console.log(chalk.green(`\nSelected ${selectedTargets.length} items for deletion:`));
     console.log(chalk.dim('─'.repeat(60)));
-    
+
     selectedTargets.forEach(target => {
       const icon = target.type === 'directory' ? '📁' : '📄';
       const warning = !target.isValid ? chalk.yellow(' ⚠️') : '';
@@ -347,13 +347,13 @@ class CleanupTool {
     });
 
     console.log(chalk.dim('─'.repeat(60)));
-    console.log(chalk.bold(`💾 Total space to be freed: ${chalk.green(this.formatBytes(totalSize))}\n`));
+    console.log(chalk.bold(`Total space to free: ${chalk.green(this.formatBytes(totalSize))}\n`));
 
     const { confirm } = await inquirer.prompt([
       {
         type: 'confirm',
         name: 'confirm',
-        message: '🗑️  Proceed with deletion?',
+        message: 'Proceed with deletion?',
         default: false
       }
     ]);
@@ -362,20 +362,20 @@ class CleanupTool {
   }
 
   async deleteTargets(targets) {
-    console.log(chalk.red('\n🗑️  DELETING SELECTED TARGETS'));
+    console.log(chalk.red('\nDeleting selected targets...'));
     console.log(chalk.gray('═'.repeat(50)));
 
     for (let i = 0; i < targets.length; i++) {
       const target = targets[i];
       const progress = `[${i + 1}/${targets.length}]`;
-      
+
       try {
-        process.stdout.write(`  ${chalk.dim(progress)} Deleting: ${chalk.cyan(target.relativePath)}... `);
+        process.stdout.write(`  ${chalk.dim(progress)} ${chalk.cyan(target.relativePath)}... `);
         await fsExtra.remove(target.path);
-        console.log(chalk.green('✅ Success'));
+        console.log(chalk.green('done'));
         this.stats.deleted++;
       } catch (error) {
-        console.log(chalk.red(`❌ Failed (${error.message})`));
+        console.log(chalk.red(`failed (${error.message})`));
         this.stats.failed++;
       }
     }
@@ -405,81 +405,68 @@ class CleanupTool {
     }
 
     spinner.stop();
-    
-    console.log(chalk.blue('\n🧹 Package Manager Cache Cleanup:'));
+
+    console.log(chalk.blue('\nPackage manager cache cleanup:'));
     results.forEach(result => {
       if (result.status === 'success') {
-        console.log(`  ${chalk.green('✅')} ${result.name} cache cleared`);
+        console.log(`  ${chalk.green('+')} ${result.name} cleared`);
       }
     });
   }
 
   displaySummary(selectedTargets) {
     const totalSize = selectedTargets.reduce((sum, target) => sum + target.size, 0);
-    
-    console.log('\n' + chalk.bold.green('📊 CLEANUP SUMMARY'));
+
+    console.log('\n' + chalk.bold.green('SUMMARY'));
     console.log(chalk.gray('═'.repeat(40)));
-    console.log(`${chalk.green('✅ Successfully deleted:')} ${this.stats.deleted} items`);
+    console.log(`${chalk.green('Deleted:')}  ${this.stats.deleted} items`);
     if (this.stats.failed > 0) {
-      console.log(`${chalk.red('❌ Failed to delete:')} ${this.stats.failed} items`);
+      console.log(`${chalk.red('Failed:')}   ${this.stats.failed} items`);
     }
-    console.log(`${chalk.blue('💾 Space freed:')} ${chalk.bold(this.formatBytes(totalSize))}`);
-    console.log(`${chalk.cyan('⏱️  Directory:')} ${this.codeDir}`);
+    console.log(`${chalk.blue('Freed:')}    ${chalk.bold(this.formatBytes(totalSize))}`);
+    console.log(`${chalk.cyan('Directory:')} ${this.codeDir}`);
     console.log(chalk.gray('═'.repeat(40)));
   }
 
   async run(isDryRun = false) {
-    // Display header
-    console.log(chalk.bold.blue('\n' + '═'.repeat(60)));
-    console.log(chalk.bold.blue('        🧹 PROJECT CLEANUP TOOL'));
-    console.log(chalk.bold.blue(`        Version ${packageJson.version}`));
-    if (packageJson.author) {
-      console.log(chalk.bold.blue(`        Author: ${packageJson.author}`));
-    }
-    console.log(chalk.bold.blue('═'.repeat(60)));
-    console.log(`${chalk.blue('📁 Working Directory:')} ${chalk.cyan(this.codeDir)}`);
-    
+    console.log(chalk.bold.blue(`\nProject Cleanup  v${packageJson.version}`));
+    console.log(`${chalk.dim('Directory:')} ${chalk.cyan(this.codeDir)}`);
+
     if (isDryRun) {
-      console.log(chalk.yellow.bold('🔍 DRY RUN MODE - No files will be deleted'));
+      console.log(chalk.yellow.bold('Dry run — no files will be deleted'));
     }
 
     try {
-      // Find and analyze targets
       this.targets = await this.findTargets();
-      
-      // Display results
+
       if (!this.displayTargets(this.targets)) {
         return;
       }
 
       if (isDryRun) {
-        console.log(chalk.yellow.bold('✨ Dry run complete. Remove --dry-run flag to actually delete files.\n'));
+        console.log(chalk.yellow.bold('Dry run complete. Remove --dry-run to actually delete files.\n'));
         return;
       }
 
-      // Interactive selection
       const selectedTargets = await this.selectTargets(this.targets);
-      
+
       if (selectedTargets.length === 0) {
-        console.log(chalk.yellow('\n🤷 No items selected for deletion.\n'));
+        console.log(chalk.yellow('\nNo items selected.\n'));
         return;
       }
 
-      // Confirm deletion
       if (!(await this.confirmDeletion(selectedTargets))) {
-        console.log(chalk.yellow('\n🚪 Cleanup cancelled.\n'));
+        console.log(chalk.yellow('\nCancelled.\n'));
         return;
       }
 
-      // Delete files
       await this.deleteTargets(selectedTargets);
-      
-      // Optional package manager cleanup
+
       const { cleanCaches } = await inquirer.prompt([
         {
           type: 'confirm',
           name: 'cleanCaches',
-          message: '🧹 Also clean package manager caches?',
+          message: 'Also clean package manager caches?',
           default: true
         }
       ]);
@@ -488,12 +475,11 @@ class CleanupTool {
         await this.cleanupPackageManagers();
       }
 
-      // Show summary
       this.displaySummary(selectedTargets);
-      console.log(chalk.green.bold('\n🎉 Cleanup completed successfully!\n'));
+      console.log(chalk.green.bold('\nDone.\n'));
 
     } catch (error) {
-      console.error(chalk.red(`\n💥 Error: ${error.message}\n`));
+      console.error(chalk.red(`\nError: ${error.message}\n`));
       if (this.options.verbose) {
         console.error(chalk.dim(error.stack));
       }
@@ -512,7 +498,17 @@ program
   .option('-v, --verbose', 'Show detailed error messages')
   .option('--no-interactive', 'Run in non-interactive mode (select all by default)')
   .option('--config <path>', 'Path to custom configuration file')
+  .option('--credits', 'Show version, author, and license info')
   .action(async (directory, options) => {
+    if (options.credits) {
+      console.log(chalk.bold.blue(`\nProject Cleanup Tool  v${packageJson.version}`));
+      console.log(chalk.gray('═'.repeat(40)));
+      console.log(`Author:     ${packageJson.author}`);
+      console.log(`License:    ${packageJson.license}`);
+      console.log(`Repository: ${packageJson.repository?.url?.replace('git+', '').replace('.git', '')}`);
+      console.log(chalk.gray('═'.repeat(40)) + '\n');
+      return;
+    }
     try {
       // Verify directory exists
       await fs.access(directory);
@@ -521,9 +517,9 @@ program
       await tool.run(options.dryRun);
     } catch (error) {
       if (error.code === 'ENOENT') {
-        console.error(chalk.red(`❌ Directory not found: ${directory}`));
+        console.error(chalk.red(`Directory not found: ${directory}`));
       } else {
-        console.error(chalk.red(`💥 Fatal error: ${error.message}`));
+        console.error(chalk.red(`Fatal error: ${error.message}`));
         if (options.verbose) {
           console.error(chalk.dim(error.stack));
         }
@@ -550,7 +546,7 @@ program
   .command('config')
   .description('Show current configuration')
   .action(() => {
-    console.log(chalk.blue('\n📋 Current Configuration:'));
+    console.log(chalk.blue('\nConfiguration:'));
     console.log(chalk.gray('═'.repeat(40)));
     console.log(chalk.yellow('Cleanup Directories:'));
     CONFIG.cleanupDirs.forEach(dir => console.log(`  • ${dir}`));
@@ -559,9 +555,21 @@ program
     console.log();
   });
 
+program
+  .command('credits')
+  .description('Show version, author, and license info')
+  .action(() => {
+    console.log(chalk.bold.blue(`\nProject Cleanup Tool  v${packageJson.version}`));
+    console.log(chalk.gray('═'.repeat(40)));
+    console.log(`Author:     ${packageJson.author}`);
+    console.log(`License:    ${packageJson.license}`);
+    console.log(`Repository: ${packageJson.repository?.url?.replace('git+', '').replace('.git', '')}`);
+    console.log(chalk.gray('═'.repeat(40)) + '\n');
+  });
+
 // Handle graceful shutdown
 process.on('SIGINT', () => {
-  console.log(chalk.yellow('\n\n🛑 Operation interrupted by user.'));
+  console.log(chalk.yellow('\n\nInterrupted.'));
   process.exit(0);
 });
 
