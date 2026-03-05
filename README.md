@@ -1,223 +1,166 @@
 # Project Cleanup Tool
 
-A powerful CLI tool for cleaning up development project directories by removing build artifacts, dependencies, cache files, and other temporary files that accumulate during development.
+A CLI tool for cleaning up development project directories by removing build artifacts, dependencies, cache files, and other temporary files that accumulate during development.
 
-**👇 See it in action!**
+**See it in action:**
 
 ![Project Cleanup Tool Example Console Output](projects-cleanup_ex.png)
 
 ## Why Use This Tool?
 
-During development, projects accumulate various temporary files and directories that can consume significant disk space:
-- **node_modules** directories (often hundreds of MB each)
-- **Build artifacts** (.next, dist, build, out directories)
-- **Python cache** (__pycache__, .pytest_cache)
-- **Package manager caches** (npm, pnpm, yarn, pip)
-- **System junk** (.DS_Store, Thumbs.db, log files)
+During development, projects accumulate various temporary files and directories that consume significant disk space:
+- `node_modules` directories (often hundreds of MB each)
+- Build artifacts (`.next`, `dist`, `build`, `out`)
+- Python cache (`__pycache__`, `.pytest_cache`, `venv`)
+- Package manager caches (npm, pnpm, yarn, pip)
+- System junk (`.DS_Store`, `Thumbs.db`, log files)
 
-This tool helps you reclaim disk space by safely identifying and removing these files across multiple projects at once, while protecting legitimate project files.
+This tool helps you reclaim disk space by safely identifying and removing these files across multiple projects at once.
+
+---
 
 ## Installation
 
-```bash
-# Install globally
-npm install -g projects-cleanup
+Install directly from GitHub (no npm publish required):
 
-# Or install directly from GitHub
-npm install -g JOSH1059/projects-cleanup
+```bash
+npm install -g github:JOSH1059/project-cleanup-tool
 ```
 
-### Local Development / From Source
+That's it. The tool is now available as `cleanup`, `clean`, `pcl`, `cleanup-projects`, or `project-cleanup`.
+
+### Requirements
+
+- Node.js >= 14.0.0
+
+---
+
+## Updating
+
+Run the same install command on any machine to update to the latest version:
+
 ```bash
-# Clone the repository
-$ git clone https://github.com/JOSH1059/projects-cleanup.git
-$ cd projects-cleanup
-$ npm install          # install dependencies
-$ npm install -g .     # install globally from local source
+npm install -g github:JOSH1059/project-cleanup-tool
 ```
+
+The tool will also notify you at the end of a run if a newer version is available on GitHub.
+
+---
 
 ## Usage
 
-This tool can be run using any of these commands:
-- `cleanup-projects` (full name)
-- `project-cleanup` (descriptive alias)
-- `cleanup` (shorter alias)
-- `clean` (shortest alias)
-- `pcl` (ultra-short alias)
-
-### Preview What Would Be Cleaned
-
-```bash
-# Show what would be cleaned without deleting anything
-cleanup --dry-run
-
-# Or use the stats command
-cleanup stats
-```
-
-### Interactive Cleanup
-
-```bash
-# Run interactive cleanup (recommended)
-cleanup
-
-# Clean a specific directory
-cleanup /path/to/your/code --dry-run
-```
-
-### Show Configuration
-
-```bash
-# Display current cleanup rules
-cleanup config
-```
-
-## Features
-
-- **🔍 Smart Detection**: Validates that cleanup targets are in legitimate project directories
-- **📊 Size Analysis**: Shows file sizes and calculates total space that can be freed
-- **✅ Interactive Selection**: Choose exactly what to delete with intuitive checkboxes
-- **🛡️ Safety First**: Dry-run mode and confirmation prompts prevent accidental deletion
-- **🎨 Beautiful Interface**: Colorful, professional CLI with progress indicators
-- **🧹 Package Manager Integration**: Cleans npm, pnpm, yarn, and pip caches
-- **📈 Detailed Statistics**: Shows what was deleted and how much space was freed
-- **⚡ High Performance**: Efficient scanning and deletion with progress feedback
-
-## Options
-
-All commands support these options:
-
-| Option | Description |
-|--------|-------------|
-| `[directory]` | Directory to clean (default: current directory) |
-| `-d, --dry-run` | Preview what would be deleted without actually deleting |
-| `-v, --verbose` | Show detailed error messages and stack traces |
-| `--no-interactive` | Run in non-interactive mode |
-| `--config <path>` | Path to custom configuration file |
-
-## Commands
+### Commands
 
 | Command | Description |
 |---------|-------------|
-| `cleanup [directory]` | Run interactive cleanup |
-| `cleanup stats [directory]` | Show cleanup statistics without deleting |
-| `cleanup config` | Display current configuration |
+| `cleanup [directory]` | Interactive cleanup (defaults to current directory) |
+| `cleanup stats [directory]` | Preview cleanup targets without deleting |
+| `cleanup config` | Show current cleanup configuration |
+| `cleanup credits` | Show version, author, and license info |
 
-## Examples
+### Options
 
-### Basic Usage
+| Option | Description |
+|--------|-------------|
+| `[directory]` | Directory to scan (default: current directory) |
+| `-d, --dry-run` | Preview what would be deleted without deleting |
+| `-v, --verbose` | Show detailed error messages and stack traces |
+| `--no-interactive` | Non-interactive mode |
+| `--credits` | Show version, author, and license info |
+
+### Examples
 
 ```bash
-# Preview cleanup for current directory
+# Preview what would be cleaned (no deletion)
 cleanup --dry-run
+cleanup stats ~/Desktop/CODE
 
-# Interactive cleanup with selection
+# Interactive cleanup
 cleanup
-
-# Clean a specific project directory
 cleanup ~/Desktop/CODE
-```
 
-### Advanced Usage
-
-```bash
-# Show detailed information
-cleanup --verbose
-
-# Get statistics only
-cleanup stats ~/projects
-
-# Check configuration
+# Show configuration
 cleanup config
+
+# Show credits
+cleanup credits
+cleanup --credits
 ```
+
+---
 
 ## How It Works
 
-The tool follows a systematic approach:
+1. Scans the directory recursively for cleanup targets
+2. Validates each target against known project indicators (e.g. `package.json`, `pyproject.toml`)
+3. Displays all found targets with sizes and warnings for suspicious entries
+4. Lets you select exactly what to delete via interactive checkboxes
+5. Confirms before deleting anything
+6. Deletes selected items and optionally cleans package manager caches
+7. Shows a summary of what was freed
 
-1. **🔍 Scans** the directory recursively for cleanup targets
-2. **📊 Analyzes** each target to determine if it's in a legitimate project
-3. **📋 Displays** all found targets with sizes and warnings
-4. **✅ Allows Selection** via interactive checkboxes
-5. **🛡️ Confirms** deletion before proceeding
-6. **🗑️ Deletes** selected items with real-time progress
-7. **🧹 Optionally Cleans** package manager caches
-8. **📈 Shows Summary** of what was accomplished
+---
 
-## Supported Project Types & Cleanup Targets
+## Supported Cleanup Targets
 
-### Node.js/JavaScript Projects
-- `node_modules/` - Package dependencies
-- `.next/` - Next.js build cache
-- `dist/`, `build/`, `out/` - Build outputs
-- `.turbo/` - Turborepo cache
+### Node.js / JavaScript
+- `node_modules/` — package dependencies
+- `.next/` — Next.js build cache
+- `dist/`, `build/`, `out/`, `.output/` — build outputs
+- `.turbo/`, `.nuxt/`, `.docusaurus/`, `.vuepress/dist/` — framework caches
 
-### Python Projects
-- `venv/`, `.venv/` - Virtual environments
-- `__pycache__/` - Python bytecode cache
-- `.pytest_cache/` - Pytest cache
-- `.coverage` - Coverage data
+### Python
+- `venv/`, `.venv/` — virtual environments
+- `__pycache__/` — bytecode cache
+- `.pytest_cache/` — pytest cache
+- `.coverage`, `coverage/`, `.nyc_output/`
 
-### Java/JVM Projects
-- `target/` - Maven build directory
-- `.gradle/` - Gradle cache
+### Java / JVM
+- `target/` — Maven build output
+- `.gradle/` — Gradle cache
 
-### Universal Cleanup
-- `.DS_Store` - macOS system files
-- `Thumbs.db` - Windows thumbnails
-- `*.log`, `*.tmp` - Log and temporary files
-- `.cache/`, `tmp/`, `temp/` - Cache directories
+### Universal
+- `.DS_Store`, `Thumbs.db`
+- `*.log`, `*.tmp`, `*.temp`
+- `.cache/`, `tmp/`, `temp/`
 
-## Safety Features
+---
 
-- **✅ Project Validation**: Ensures cleanup targets are in actual project directories
-- **⚠️ Warning System**: Flags potentially suspicious cleanup targets
-- **🛡️ Confirmation Prompts**: Multiple confirmation steps before deletion
-- **🔍 Dry Run Mode**: Preview all actions before execution
-- **📊 Detailed Reporting**: Clear feedback on what was done
+## Safety
 
-### Smart Project Detection
+- **Project validation** — only targets directories inside real projects (checks for `package.json`, `pyproject.toml`, etc.)
+- **Warning flags** — marks entries that don't appear to be in a legitimate project
+- **Dry run** — preview everything before committing
+- **Confirmation prompt** — explicit confirm required before any deletion
 
-The tool validates cleanup targets by checking for project indicators:
-
-| Target | Validation Files |
-|--------|------------------|
-| `node_modules` | package.json, package-lock.json, yarn.lock |
-| `.next` | next.config.js, pages/, app/ directories |
-| `venv` | requirements.txt, setup.py, pyproject.toml |
-| `__pycache__` | Python project files in parent directories |
-| `target` | Cargo.toml, pom.xml, build.gradle |
+---
 
 ## Package Manager Cache Cleanup
 
-Optionally cleans caches for:
-- **npm** (`npm cache clean --force`)
-- **pnpm** (`pnpm store prune`)
-- **yarn** (`yarn cache clean`)
-- **pip** (`pip cache purge`)
+After deleting project files, the tool optionally cleans global package manager caches:
 
-## Configuration
+| Manager | Command |
+|---------|---------|
+| npm | `npm cache clean --force` |
+| pnpm | `pnpm store prune` |
+| yarn | `yarn cache clean` |
+| pip | `pip cache purge` |
 
-View current configuration with:
-```bash
-cleanup config
-```
+---
 
-The tool is pre-configured with sensible defaults for common development scenarios, but can be customized via configuration files (coming soon).
-
-## License
-
-MIT
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-### Development Setup
+## Development
 
 ```bash
 git clone https://github.com/JOSH1059/project-cleanup-tool.git
 cd project-cleanup-tool
 npm install
-npm link  # For local testing
+npm install -g .   # install globally from local source
 ```
+
+To release a new version: bump the version in `package.json`, commit, and push to `main`. A GitHub Action will automatically create a git tag and GitHub Release.
+
+---
+
+## License
+
+MIT

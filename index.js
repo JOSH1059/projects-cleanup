@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require('fs').promises;
+const https = require('https');
 const path = require('path');
 const { execSync } = require('child_process');
 const { program } = require('commander');
@@ -41,6 +42,38 @@ const CONFIG = {
     '.gradle': ['build.gradle', 'gradle.properties']
   }
 };
+
+// Update checker
+function isNewerVersion(remote, local) {
+  const parse = v => v.split('.').map(Number);
+  const [rMaj, rMin, rPat] = parse(remote);
+  const [lMaj, lMin, lPat] = parse(local);
+  return rMaj > lMaj || (rMaj === lMaj && rMin > lMin) || (rMaj === lMaj && rMin === lMin && rPat > lPat);
+}
+
+function checkForUpdates() {
+  return new Promise((resolve) => {
+    const req = https.get({
+      hostname: 'raw.githubusercontent.com',
+      path: '/JOSH1059/project-cleanup-tool/main/package.json',
+      timeout: 3000,
+      headers: { 'User-Agent': 'project-cleanup-tool' }
+    }, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          const remote = JSON.parse(data);
+          resolve(isNewerVersion(remote.version, packageJson.version) ? remote.version : null);
+        } catch {
+          resolve(null);
+        }
+      });
+    });
+    req.on('error', () => resolve(null));
+    req.on('timeout', () => { req.destroy(); resolve(null); });
+  });
+}
 
 // Enhanced Progress Bar using cli-progress
 class EnhancedProgressBar {
@@ -436,6 +469,8 @@ class CleanupTool {
       console.log(chalk.yellow.bold('Dry run — no files will be deleted'));
     }
 
+    const updateCheck = checkForUpdates();
+
     try {
       this.targets = await this.findTargets();
 
@@ -476,6 +511,13 @@ class CleanupTool {
       }
 
       this.displaySummary(selectedTargets);
+
+      const newVersion = await updateCheck;
+      if (newVersion) {
+        console.log(chalk.yellow(`\nUpdate available: v${packageJson.version} → v${newVersion}`));
+        console.log(chalk.dim(`  npm install -g github:JOSH1059/project-cleanup-tool`));
+      }
+
       console.log(chalk.green.bold('\nDone.\n'));
 
     } catch (error) {
