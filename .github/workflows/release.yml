@@ -24,14 +24,24 @@ jobs:
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
 
+      - name: Build bundle
+        if: steps.version.outputs.exists == 'false'
+        run: npm install && npm run build
+
+      - name: Commit bundle
+        if: steps.version.outputs.exists == 'false'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add bundle.js
+          git diff --staged --quiet || git commit -m "Build bundle for v${{ steps.version.outputs.current }} [skip ci]" && git push
+
       - name: Create tag and release
         if: steps.version.outputs.exists == 'false'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION="${{ steps.version.outputs.current }}"
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag "v$VERSION"
           git push origin "v$VERSION"
           gh release create "v$VERSION" \
